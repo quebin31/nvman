@@ -1,18 +1,23 @@
 use std::fmt;
 use shells::bash;
-use crate::systemd::{
-    Status,
-    Service,
-    ServiceStatus,
-};
-
+use crate::systemd::Service;
 use crate::utils::checks;
 
 /// Possible optimus modes: intel, nvidia
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Mode {
     Intel,
     Nvidia,
+}
+
+impl Mode {
+    pub fn is_intel(&self) -> bool {
+        *self == Mode::Intel
+    }
+
+    pub fn is_nvidia(&self) -> bool {
+        *self == Mode::Nvidia
+    }
 }
 
 impl fmt::Display for Mode {
@@ -42,16 +47,20 @@ pub fn set_mode(mode: Mode) {
     let optimus = Service::new("optimus-manager");
     let bumblebee = Service::new("bumblebeed");
 
-    if checks::check_gdm_prime() == checks::GdmPrimeFlag::Bad {
-        return;
-    }
-
     info_print!("Switching to {}", mode.to_string());
 
     bumblebee.stop();
     optimus.start();
 
     bash!("optimus-manager --switch {} --no-confirm", mode.to_string());
+}
+
+pub fn toggle_mode() {
+    let mode = get_mode();
+    match mode {
+        Mode::Intel => set_mode(Mode::Nvidia),
+        Mode::Nvidia => set_mode(Mode::Intel),
+    }
 }
 
 /// Get the current startup using optimus-manager
@@ -72,11 +81,9 @@ pub fn set_startup(startup: Mode) {
 
     info_print!("Setting default startup to {}", startup.to_string());
 
-    let ServiceStatus(opt_active, _) = optimus.status();
+    let was_active = optimus.active();
     optimus.start();
 
     bash!("optimus-manager --set-startup {}", startup.to_string());
-    if opt_active == Status::Inactive {
-        optimus.stop();
-    }
+    if !was_active { optimus.stop(); }
 }
