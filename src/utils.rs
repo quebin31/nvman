@@ -1,4 +1,4 @@
-static VERSION: &str = "2.0.1";
+static VERSION: &str = "2.0.2";
 
 pub mod print {
     use std::env;

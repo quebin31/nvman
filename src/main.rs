@@ -65,7 +65,16 @@ fn run_app() -> Result<(), ()> {
             }
 
             if let Some(_) = args.get(2) {
+                let optimus = Service::new("optimus-manager");
+                let bumblebee = Service::new("bumblebeed");
+
+                optimus.stop();
+                bumblebee.start();
+
                 bumblebee::run(&args[2..]);
+
+                bumblebee.stop();
+                optimus.start();
             } else {
                 error_print!("Please provide a command to run!");
                 utils::print::print_usage_run();
