@@ -3,11 +3,25 @@ use shells::bash;
 
 /// Enumeration representing the two possible states of
 /// NVIDIA GPU
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum State {
     On,
     Off,
     Unknown,
+}
+
+impl State {
+    pub fn is_on(&self) -> bool {
+        *self == State::On
+    }
+
+    pub fn is_off(&self) -> bool {
+        *self == State::Off
+    }
+
+    pub fn is_unknown(&self) -> bool {
+        *self == State::Unknown
+    }
 }
 
 impl fmt::Display for State {
@@ -35,6 +49,8 @@ pub fn state() -> State {
 
 /// Manually set the state of NVIDIA GPU
 pub fn set_state(state: State) {
+    info_print!("Turning {} the NVIDIA GPU", state);
+
     match state {
         State::On => {
             sudo_bash!("/usr/bin/tee /proc/acpi/bbswitch <<< ON");
