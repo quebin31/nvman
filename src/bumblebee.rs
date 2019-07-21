@@ -1,12 +1,15 @@
 use crate::nvidia;
 use std::process::Command;
 
-pub fn run(cmd: &str, args: &[String]) -> i32 {
-    info_print!("Starting {}", cmd);
+pub fn run(cmd_and_args: &[String]) -> i32 {
+    info_print!("Starting program");
 
-    let command = Command::new(cmd).args(args).spawn().map_err(|_| {
-        error_print!("Failed to start the command!");
-    });
+    let command = Command::new("primusrun")
+        .args(cmd_and_args)
+        .spawn()
+        .map_err(|_| {
+            error_print!("Failed to start the command!");
+        });
 
     let code = match command.unwrap().wait() {
         Ok(status) => status.code().unwrap(),
@@ -17,7 +20,7 @@ pub fn run(cmd: &str, args: &[String]) -> i32 {
         }
     };
 
-    info_print!("Finished {}", cmd);
+    info_print!("Finished program");
 
     if nvidia::state().is_on() {
         nvidia::set_state(nvidia::State::Off);

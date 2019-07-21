@@ -64,8 +64,8 @@ fn run_app() -> Result<(), ()> {
                 return Err(());
             }
 
-            if let Some(arg) = args.get(2) {
-                bumblebee::run(arg, &args[3..]);
+            if let Some(_) = args.get(2) {
+                bumblebee::run(&args[2..]);
             } else {
                 error_print!("Please provide a command to run!");
                 utils::print::print_usage_run();
