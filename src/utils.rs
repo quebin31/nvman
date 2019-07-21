@@ -204,21 +204,28 @@ pub mod checks {
         }
 
         let mut result = CheckResult::Ok;
-        if gdm_name != "gdm-prime" {
+        if gdm_name.trim() != "gdm-prime" {
             error_print! {
                 "Looks like you're using gdm, optimus-manager currently depends \
-                on gdm-prime (tweaked version of gdm)."
+                on gdm-prime (tweaked version of gdm available on the AUR)."
             }
             result = CheckResult::Bad;
         }
 
-        let (code, stdout, _) =
-            bash!("cat /etc/gdm/custom.conf | grep \'\\<WaylandEnable\\>\' | cut -dW -f 1");
-        if stdout != "#" {
-            error_print! {
-                "gdm is currently using Wayland, disable it in /etc/gdm/custom.conf (WaylandEnable=false)"
+        let (_, contents, _) = bash!("cat /etc/gdm/custom.conf");
+        let contents = contents.split("\n");
+        for line in contents {
+            let line = line.trim();
+            if !line.contains("WaylandEnable") {
+                continue;
             }
-            result = CheckResult::Bad;
+
+            if line.contains("#") || line.contains("true") {
+                error_print! {
+                    "gdm is currently using Wayland, disable it in /etc/gdm/custom.conf (WaylandEnable=false)"
+                }
+                result = CheckResult::Bad;
+            }
         }
 
         return result;
