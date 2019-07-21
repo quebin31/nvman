@@ -1,21 +1,15 @@
-use std::process::Command;
 use crate::nvidia;
-use crate::systemd::Service;
+use std::process::Command;
 
 pub fn run(cmd: &str, args: &[String]) -> i32 {
     info_print!("Starting {}", cmd);
 
-    let command = Command::new(cmd)
-        .args(args)
-        .spawn()
-        .map_err(|_| {
-            error_print!("Failed to start the command!");
-        });
+    let command = Command::new(cmd).args(args).spawn().map_err(|_| {
+        error_print!("Failed to start the command!");
+    });
 
     let code = match command.unwrap().wait() {
-        Ok(status) => {
-            status.code().unwrap()
-        }
+        Ok(status) => status.code().unwrap(),
 
         Err(_) => {
             error_print!("Program was terminated by signal!");

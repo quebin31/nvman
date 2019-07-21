@@ -1,5 +1,5 @@
-use std::fmt;
 use shells::bash;
+use std::fmt;
 
 /// Enumeration representing the two possible states of
 /// NVIDIA GPU
@@ -13,14 +13,6 @@ pub enum State {
 impl State {
     pub fn is_on(&self) -> bool {
         *self == State::On
-    }
-
-    pub fn is_off(&self) -> bool {
-        *self == State::Off
-    }
-
-    pub fn is_unknown(&self) -> bool {
-        *self == State::Unknown
     }
 }
 

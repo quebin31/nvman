@@ -1,7 +1,6 @@
-use std::fmt;
-use shells::bash;
 use crate::systemd::Service;
-use crate::utils::checks;
+use shells::bash;
+use std::fmt;
 
 /// Possible optimus modes: intel, nvidia
 #[derive(Debug, PartialEq)]
@@ -11,10 +10,6 @@ pub enum Mode {
 }
 
 impl Mode {
-    pub fn is_intel(&self) -> bool {
-        *self == Mode::Intel
-    }
-
     pub fn is_nvidia(&self) -> bool {
         *self == Mode::Nvidia
     }
@@ -77,7 +72,6 @@ pub fn get_startup() -> Mode {
 /// Set the default startup using optimus-manager
 pub fn set_startup(startup: Mode) {
     let optimus = Service::new("optimus-manager");
-    let bumblebee = Service::new("bumblebeed");
 
     info_print!("Setting default startup to {}", startup.to_string());
 
@@ -85,5 +79,7 @@ pub fn set_startup(startup: Mode) {
     optimus.start();
 
     bash!("optimus-manager --set-startup {}", startup.to_string());
-    if !was_active { optimus.stop(); }
+    if !was_active {
+        optimus.stop();
+    }
 }

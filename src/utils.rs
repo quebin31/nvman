@@ -186,10 +186,6 @@ pub mod checks {
         pub fn is_bad(&self) -> bool {
             *self == CheckResult::Bad
         }
-
-        pub fn is_ok(&self) -> bool {
-            *self == CheckResult::Ok
-        }
     }
 
     pub fn check_gdm_prime() -> CheckResult {
