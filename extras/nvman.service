@@ -1,0 +1,10 @@
+[Unit]
+Description=NVIDIA Manager Inspector
+Before=bumblebeed.service optimus-manager.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/nvman inspector
+
+[Install]
+WantedBy=bumblebeed.service optimus-manager.service graphical.target
