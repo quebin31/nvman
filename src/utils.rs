@@ -77,13 +77,13 @@ pub mod print {
         };
 
         println! {
-            "  {}   {}     Manually start a service",
-            Green.paint("start"),
+            "  {}     {}     Use the specified service for this session",
+            Green.paint("use"),
             Yellow.paint("<optimus|bumblebee>"),
         };
 
         println! {
-            "  {}    {}     Manually stop a service",
+            "  {}    {}     Stop using the specified service",
             Green.paint("stop"),
             Yellow.paint("<optimus|bumblebee>"),
         };
@@ -140,12 +140,12 @@ pub mod print {
         };
     }
 
-    pub fn print_usage_start() {
+    pub fn print_usage_use() {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
             env::args().nth(0).unwrap(),
-            Green.paint("start"),
+            Green.paint("use"),
             Yellow.paint("<optimus|bumblebee>"),
         };
     }

@@ -176,7 +176,7 @@ fn run_app() -> Result<(), ()> {
             }
         }
 
-        "start" => {
+        "use" => {
             if let Some(arg) = args.get(2) {
                 let optimus = Service::new("optimus-manager");
                 let bumblebee = Service::new("bumblebeed");
@@ -194,13 +194,13 @@ fn run_app() -> Result<(), ()> {
 
                     invalid => {
                         error_print!("Invalid value `{}`", invalid);
-                        utils::print::print_usage_start();
+                        utils::print::print_usage_use();
                         return Err(());
                     }
                 }
             } else {
                 error_print!("Please provide a value!");
-                utils::print::print_usage_start();
+                utils::print::print_usage_use();
                 return Err(());
             }
         }
