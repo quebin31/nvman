@@ -15,7 +15,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "nvman"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "ansi_term 0.11.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "shells 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
