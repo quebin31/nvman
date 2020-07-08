@@ -64,6 +64,6 @@ pub fn toggle_state() {
     match state() {
         State::On => self::set_state(State::Off),
         State::Off => self::set_state(State::On),
-        State::Unknown => return,
+        State::Unknown => (),
     }
 }

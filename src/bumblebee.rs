@@ -26,5 +26,5 @@ pub fn run(cmd_and_args: &[String]) -> i32 {
         nvidia::set_state(nvidia::State::Off);
     }
 
-    return code;
+    code
 }

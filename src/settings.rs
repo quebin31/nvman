@@ -19,9 +19,9 @@ pub fn set_default_service(service: &str) {
 pub fn get_default_service() -> String {
     let (_, contents, _) = bash!("cat /etc/default/nvman");
 
-    let key_values = contents.split("\n");
+    let key_values = contents.split('\n');
     for key_value in key_values {
-        let key_value: Vec<_> = key_value.split("=").collect();
+        let key_value: Vec<_> = key_value.split('=').collect();
         let (key, value) = (key_value.get(0), key_value.get(1));
         if key.is_none() || value.is_none() {
             continue;
@@ -36,6 +36,6 @@ pub fn get_default_service() -> String {
     warn_print!("Not found /etc/default/nvman or default is not present on it");
     info_print!("Creating default config");
     sudo_bash!("true");
-    bash!("{} default optimus", std::env::args().nth(0).unwrap());
+    bash!("{} default optimus", std::env::args().next().unwrap());
     "optimus".to_owned()
 }

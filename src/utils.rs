@@ -37,7 +37,7 @@ pub mod print {
         println! {
             "{} {} [{}] [{}]",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("command"),
             Yellow.paint("arg(s)"),
         };
@@ -104,7 +104,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("nvidia"),
             Yellow.paint("<on|off|auto>"),
         };
@@ -114,7 +114,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("run"),
             Yellow.paint("<cmd> [args..]"),
         };
@@ -124,7 +124,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("switch"),
             Yellow.paint("<nvidia|intel|auto>"),
         };
@@ -134,7 +134,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("startup"),
             Yellow.paint("<nvidia|intel>"),
         };
@@ -144,7 +144,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("use"),
             Yellow.paint("<optimus|bumblebee>"),
         };
@@ -154,7 +154,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("stop"),
             Yellow.paint("<optimus|bumblebee>"),
         };
@@ -164,7 +164,7 @@ pub mod print {
         println! {
             "{} {} {} {}",
             White.bold().paint("Usage:"),
-            env::args().nth(0).unwrap(),
+            env::args().next().unwrap(),
             Green.paint("default"),
             Yellow.paint("<optimus|bumblebee>"),
         };
@@ -199,24 +199,26 @@ pub mod checks {
             return CheckResult::Ok;
         }
 
-        let mut result = CheckResult::Ok;
-        if gdm_name.trim() != "gdm-prime" {
+        let mut result = if gdm_name.trim() != "gdm-prime" {
             error_print! {
                 "Looks like you're using gdm, optimus-manager currently depends \
                 on gdm-prime (tweaked version of gdm available on the AUR)."
             }
-            result = CheckResult::Bad;
-        }
+
+            CheckResult::Bad
+        } else {
+            CheckResult::Ok
+        };
 
         let (_, contents, _) = bash!("cat /etc/gdm/custom.conf");
-        let contents = contents.split("\n");
+        let contents = contents.split('\n');
         for line in contents {
             let line = line.trim();
             if !line.contains("WaylandEnable") {
                 continue;
             }
 
-            if line.contains("#") || line.contains("true") {
+            if line.contains('#') || line.contains("true") {
                 error_print! {
                     "gdm is currently using Wayland, disable it in /etc/gdm/custom.conf (WaylandEnable=false)"
                 }
@@ -224,7 +226,7 @@ pub mod checks {
             }
         }
 
-        return result;
+        result
     }
 
     pub fn check_nvman_service() -> CheckResult {

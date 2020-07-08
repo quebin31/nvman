@@ -64,7 +64,7 @@ fn run_app() -> Result<(), ()> {
                 return Err(());
             }
 
-            if let Some(_) = args.get(2) {
+            if args.get(2).is_some() {
                 let optimus = Service::new("optimus-manager");
                 let bumblebee = Service::new("bumblebeed");
 
@@ -142,7 +142,7 @@ fn run_app() -> Result<(), ()> {
             if let Some(arg) = args.get(2) {
                 if get_current_uid() != 0 {
                     let (code, stdout, _) =
-                        sudo_bash!("{} default {}", std::env::args().nth(0).unwrap(), arg);
+                        sudo_bash!("{} default {}", std::env::args().next().unwrap(), arg);
 
                     print!("{}", stdout);
                     if code != 0 {
@@ -256,7 +256,7 @@ fn run_app() -> Result<(), ()> {
         }
     }
 
-    return Ok(());
+    Ok(())
 }
 
 fn main() -> Result<(), ()> {
