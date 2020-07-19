@@ -130,16 +130,6 @@ pub mod print {
         };
     }
 
-    pub fn print_usage_startup() {
-        println! {
-            "{} {} {} {}",
-            White.bold().paint("Usage:"),
-            env::args().next().unwrap(),
-            Green.paint("startup"),
-            Yellow.paint("<nvidia|intel>"),
-        };
-    }
-
     pub fn print_usage_use() {
         println! {
             "{} {} {} {}",

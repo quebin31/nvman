@@ -68,18 +68,3 @@ pub fn get_startup() -> Mode {
         Mode::Intel
     }
 }
-
-/// Set the default startup using optimus-manager
-pub fn set_startup(startup: Mode) {
-    let optimus = Service::new("optimus-manager");
-
-    info_print!("Setting default startup to {}", startup.to_string());
-
-    let was_active = optimus.active();
-    optimus.start();
-
-    bash!("optimus-manager --set-startup {}", startup.to_string());
-    if !was_active {
-        optimus.stop();
-    }
-}

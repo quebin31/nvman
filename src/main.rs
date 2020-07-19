@@ -120,24 +120,6 @@ fn run_app() -> Result<(), ()> {
             }
         }
 
-        "startup" => {
-            if let Some(arg) = args.get(2) {
-                match arg.as_str() {
-                    "nvidia" => optimus::set_startup(optimus::Mode::Nvidia),
-                    "intel" => optimus::set_startup(optimus::Mode::Intel),
-                    invalid => {
-                        error_print!("Invalid value `{}`", invalid);
-                        utils::print::print_usage_startup();
-                        return Err(());
-                    }
-                }
-            } else {
-                error_print!("Please provide a value!");
-                utils::print::print_usage_startup();
-                return Err(());
-            }
-        }
-
         "default" => {
             if let Some(arg) = args.get(2) {
                 if get_current_uid() != 0 {
@@ -234,11 +216,13 @@ fn run_app() -> Result<(), ()> {
             };
 
             if non_default.enabled() {
+                non_default.stop();
                 non_default.disable();
             }
 
             if !default.enabled() {
                 default.enable();
+                default.start();
             }
         }
 
